@@ -1,20 +1,22 @@
-import 'package:desafio_guia_motel/list_motel_module/models/guia_motel_models.dart';
-import 'package:desafio_guia_motel/list_motel_module/services/motel_service.dart';
+import 'package:desafio_guia_motel/controllers/initializer_controllers.dart';
+import 'package:desafio_guia_motel/list_motel_module/screens/motel_list_screen.dart';
+import 'package:flutter/material.dart';
 
-void main() async {
-  final motelService = MotelService();
+void main() {
+  InitializerControllers();
+  runApp(const MyApp());
+}
 
-  try {
-    List<GuiaMoteisModel> moteis = await motelService.fetchGuiaMoteis();
-    for (var motel in moteis) {
-      print("🏨 Motel: ${motel.fantasia}");
-      print("📍 Bairro: ${motel.bairro}");
-      print("📏 Distância: ${motel.distancia} km");
-      print("💖 Favoritos: ${motel.qtdFavoritos}");
-      print("🛏️ Suítes disponíveis: ${motel.suites.length}");
-      print("----------------------");
-    }
-  } catch (e) {
-    print("❌ Erro ao buscar motéis: $e");
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Lista de Suítes',
+
+      home: const MotelListScreen(), 
+    );
   }
 }
