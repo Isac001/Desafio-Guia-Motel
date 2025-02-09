@@ -15,7 +15,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Lista de Suítes',
-
       home: const MotelListScreen(), 
     );
   }
