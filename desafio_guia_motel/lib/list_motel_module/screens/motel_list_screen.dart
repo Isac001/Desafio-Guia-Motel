@@ -1,5 +1,10 @@
 import 'package:desafio_guia_motel/components/bar_itens_suite_component.dart';
+import 'package:desafio_guia_motel/components/custom_toggle_switch_component.dart';
+import 'package:desafio_guia_motel/components/icon_component.dart';
 import 'package:desafio_guia_motel/components/reservation_value_camp_component.dart';
+import 'package:desafio_guia_motel/components/text_component.dart';
+import 'package:desafio_guia_motel/constans/fontsize_constants.dart';
+import 'package:desafio_guia_motel/constans/paddigns_constans.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -17,6 +22,16 @@ class _MotelListScreenState extends State<MotelListScreen> {
   final MotelServiceController _motelServiceController =
       Get.find<MotelServiceController>();
 
+  String selectedZone = 'Zona Norte'; // Valor inicial do dropdown
+
+  final List<String> zones = [
+    'Zona Norte',
+    'Zona Sul',
+    'Zona Leste',
+    'Zona Oeste',
+    'Centro'
+  ]; // Lista de zonas de São Paulo
+
   @override
   void initState() {
     super.initState();
@@ -29,67 +44,72 @@ class _MotelListScreenState extends State<MotelListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red,
-        elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () {},
-              ),
-              Row(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
-                    ),
-                    icon: const Icon(Icons.flash_on, size: 20),
-                    label:
-                        const Text("ir agora", style: TextStyle(fontSize: 16)),
+        backgroundColor: Colors.red.shade700,
+        toolbarHeight: 120,
+        title: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Ícone de menu
+                IconButton(
+                  icon: const IconWidget(icon: Icons.menu, size: 28),
+                  onPressed: () {},
+                ),
+                // Toggle switch
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: CustomToggleSwitch(),
                   ),
-                  const SizedBox(width: 10),
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade700,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
+                ),
+                // Ícone de pesquisa
+                IconButton(
+                  icon: const IconWidget(icon: Icons.search, size: 28),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            const SizedBox(height: kPaddingSmall),
+
+            // Dropdown de zonas
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedZone,
+                icon: const IconWidget(icon: Icons.arrow_drop_down),
+                dropdownColor: Colors.red.shade700,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: kFontsizeStandard,
+                  fontWeight: FontWeight.bold,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                items: zones.map((zone) {
+                  return DropdownMenuItem<String>(
+                    value: zone,
+                    child: TextWidget(
+                      data: zone,
+                      fontSize: kFontsizeStandard,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    icon: const Icon(Icons.calendar_today, size: 20),
-                    label: const Text("ir outro dia",
-                        style: TextStyle(fontSize: 16)),
-                  ),
-                ],
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedZone = newValue!;
+                  });
+                },
               ),
-              IconButton(
-                icon: const Icon(Icons.search, color: Colors.white),
-                onPressed: () {},
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(kPaddingMedium),
         child: PagedListView<int, GuiaMoteisModel>(
           pagingController: _motelServiceController.pagingController,
           builderDelegate: PagedChildBuilderDelegate(
@@ -97,69 +117,76 @@ class _MotelListScreenState extends State<MotelListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Erro ao carregar dados."),
+                  const TextWidget(
+                    data: "Erro ao carregar dados.",
+                    fontSize: kFontsizeMedium,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                   ElevatedButton(
                     onPressed: () => _motelServiceController.refreshList(),
-                    child: const Text("Tentar Novamente"),
+                    child: const TextWidget(
+                      data: "Tentar Novamente",
+                      fontSize: kFontsizeMedium,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
             ),
             noItemsFoundIndicatorBuilder: (context) => const Center(
-              child: Text("Nenhum motel encontrado!"),
+              child: TextWidget(
+                data: "Nenhum motel encontrado!",
+                fontSize: kFontsizeMedium,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
             itemBuilder: (context, motel, index) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Nome e logo do motel
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.symmetric(vertical: kPaddingSM),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ClipOval(
                           child: Image.network(
                             motel.logo,
-                            height: 90,
-                            width: 90,
+                            height: 70,
+                            width: 70,
                             fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: kPaddingSM),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              motel.fantasia,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            TextWidget(
+                              data: motel.fantasia,
+                              fontSize: kFontsizeMedium,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontFamily: 'Times New Roman',
                             ),
-                            Text(
-                              motel.bairro,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                              ),
+                            TextWidget(
+                              data: motel.bairro,
+                              fontSize: kFontsizeStandard,
+                              color: Colors.grey.shade700,
                             ),
-                            Text(
-                              "${motel.distancia.toStringAsFixed(2)} km",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade700,
-                              ),
+                            TextWidget(
+                              data: "${motel.distancia.toStringAsFixed(2)} km",
+                              fontSize: kFontsizeStandard,
+                              color: Colors.grey.shade700,
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-
-                  // Listagem horizontal das suítes
                   SizedBox(
-                    height: 450, // Ajustado para caber os valores corretamente
+                    height: 800,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: motel.suites.length,
@@ -167,70 +194,65 @@ class _MotelListScreenState extends State<MotelListScreen> {
                         final suite = motel.suites[suiteIndex];
 
                         return Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
+                          padding: const EdgeInsets.only(right: kPaddingSM),
                           child: SizedBox(
-                            width: 280, // Largura do card
+                            width: 330,
+                            height: 330,
                             child: Column(
                               children: [
-                                // Card de Fotos da Suíte + Nome
                                 Card(
-                                  elevation: 3,
+                                  elevation: 0,
+                                  color: Colors.white,
                                   child: Column(
                                     children: [
-                                      SizedBox(
-                                        height: 200,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            children: suite.fotos.map((foto) {
-                                              return Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8.0),
-                                                  child: Image.network(
-                                                    foto,
-                                                    height: 200,
-                                                    width: 280,
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                      SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: suite.fotos.map((foto) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: kPaddingSmall),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                                child: Image.network(
+                                                  foto,
+                                                  height: 240,
+                                                  width: 300,
+                                                  fit: BoxFit.cover,
                                                 ),
-                                              );
-                                            }).toList(),
-                                          ),
+                                              ),
+                                            );
+                                          }).toList(),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          suite.nome,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                        padding:
+                                            const EdgeInsets.all(kPaddingSmall),
+                                        child: TextWidget(
+                                          data: suite.nome,
+                                          fontSize: kFontsizeMedium,
+                                          fontWeight: FontWeight.bold,
                                           textAlign: TextAlign.center,
+                                          color: Colors.black,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-
-                                // Barra de itens
-                                ExpandableIconsRow(
-                                  items: suite.categoriaItens.map((item) {
-                                    return {
-                                      'icone': item.icone,
-                                      'nome': item.nome,
-                                    };
-                                  }).toList(),
-                                  iconSize: 30.0,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: kPaddingSmall - 4),
+                                  child: BarItensSuiteComponent(
+                                    items: suite.categoriaItens.map((item) {
+                                      return {
+                                        'icone': item.icone,
+                                        'nome': item.nome,
+                                      };
+                                    }).toList(),
+                                    iconSize: 40.0,
+                                  ),
                                 ),
-                                const SizedBox(height: 8),
-
-                                // Lista de opções de reserva
                                 ReservationList(
                                   periods: suite.periodos.map((periodo) {
                                     return {
@@ -252,7 +274,6 @@ class _MotelListScreenState extends State<MotelListScreen> {
                       },
                     ),
                   ),
-                  const Divider(height: 32),
                 ],
               );
             },
