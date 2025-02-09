@@ -1,73 +1,94 @@
+import 'package:desafio_guia_motel/components/text_component.dart';
+import 'package:desafio_guia_motel/constans/fontsize_constants.dart';
+import 'package:desafio_guia_motel/constans/paddigns_constans.dart';
 import 'package:flutter/material.dart';
 
-class ExpandableIconsRow extends StatelessWidget {
-  final List<Map<String, String>> items; // Lista com ícones e nomes
-  final double iconSize; // Tamanho dos ícones
-  final EdgeInsetsGeometry padding; // Padding para a linha
+class BarItensSuiteComponent extends StatelessWidget {
+  final List<Map<String, String>> items;
+  final double iconSize;
 
-  const ExpandableIconsRow({
-    Key? key,
+  const BarItensSuiteComponent({
+    super.key,
     required this.items,
-    this.iconSize = 30.0,
-    this.padding = const EdgeInsets.all(8.0),
-  }) : super(key: key);
+    this.iconSize = 20.0,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Mostra até 3 ícones na linha principal
-    final itemsToShow = items.take(3).toList();
+    final maxVisibleItems = 3;
+    final bool hasMoreItems = items.length > maxVisibleItems;
 
-    return Padding(
-      padding: padding,
+    final itemsToShow = hasMoreItems
+        ? [
+            ...items.take(2),
+            {'icone': 'ver_todos', 'nome': 'Ver todos'}
+          ]
+        : items.take(maxVisibleItems).toList();
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: kPaddingSmall,
+        horizontal: kPaddingMedium,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.shade300,
+          width: 0,
+        ),
+      ),
       child: Row(
-        children: [
-          // Ícones visíveis na linha
-          ...itemsToShow.map((item) => Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: SizedBox(
-                  height: iconSize,
-                  width: iconSize,
-                  child: Image.network(
-                    item['icone'] ?? '',
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.device_unknown,
-                      size: 30,
-                      color: Colors.grey,
-                    ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: itemsToShow.map((item) {
+          final isMoreButton = item['icone'] == 'ver_todos';
+
+          return isMoreButton
+              ? GestureDetector(
+                  onTap: () => _showAllIconsPopup(context),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.more_horiz,
+                        color: Colors.grey,
+                        size: iconSize + 8, // Tamanho ajustado
+                      ),
+                      const SizedBox(width: kPaddingSmall),
+                      TextWidget(
+                        data: "Ver todos",
+                        fontSize: kFontsizeStandard,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ],
                   ),
-                ),
-              )),
-          // Botão de expandir, visível apenas se houver mais de 3 itens
-          if (items.length > 3)
-            GestureDetector(
-              onTap: () => _showAllIconsPopup(context),
-              child: Container(
-                height: iconSize,
-                width: iconSize,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.grey.shade300,
-                ),
-                child: Icon(
-                  Icons.more_horiz,
-                  size: iconSize * 0.6,
-                  color: Colors.grey.shade700,
-                ),
-              ),
-            ),
-        ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: Image.network(
+                        item['icone'] ?? '',
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(
+                          Icons.device_unknown,
+                          size: 30,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: kPaddingSmall),
+                  ],
+                );
+        }).toList(),
       ),
     );
   }
 
-  /// Exibe o popup centralizado ocupando espaço adaptável ao número de itens
   void _showAllIconsPopup(BuildContext context) {
-    final itemHeight = 60.0; // Altura de cada item (ajustável)
-    final maxPopupHeight = MediaQuery.of(context).size.height * 0.8;
-    final calculatedHeight =
-        (items.length * itemHeight) + 120; // Altura calculada
-
+    const double popupIconSize = 35.0;
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -76,76 +97,104 @@ class ExpandableIconsRow extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: calculatedHeight > maxPopupHeight
-                ? maxPopupHeight // Limita a altura máxima
-                : calculatedHeight, // Adapta a altura
-            child: Column(
-              children: [
-                const Text(
-                  "Todos os itens",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final int rows = (items.length / 3).ceil();
+              final double calculatedHeight = rows * (popupIconSize + 48) + 200;
+
+              return Container(
+                padding: const EdgeInsets.all(kPaddingMedium),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      final item = items[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: iconSize,
-                              width: iconSize,
-                              child: Image.network(
-                                item['icone'] ?? '',
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                  Icons.device_unknown,
-                                  size: 30,
-                                  color: Colors.grey,
+                constraints: BoxConstraints(
+                  maxHeight: calculatedHeight.clamp(200, constraints.maxHeight),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: TextWidget(
+                        data: "Itens disponíveis",
+                        fontSize: kFontsizeLarge,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                    const SizedBox(height: kPaddingSmall),
+                    const TextWidget(
+                      data: "Todos os itens disponíveis",
+                      fontSize: kFontsizeStandard,
+                      color: Colors.grey,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: kPaddingMedium),
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: kPaddingSmall,
+                          mainAxisSpacing: kPaddingSmall,
+                        ),
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                height: popupIconSize,
+                                width: popupIconSize,
+                                child: Image.network(
+                                  item['icone'] ?? '',
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      const Icon(
+                                    Icons.device_unknown,
+                                    size: 30,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              item['nome'] ?? '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
+                              const SizedBox(height: kPaddingSmall),
+                              TextWidget(
+                                data: item['nome'] ?? '',
+                                fontSize: kFontsizeStandard,
+                                textAlign: TextAlign.center,
+                                color: Colors.grey.shade800,
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context); // Fecha o popup
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                            ],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    "Fechar",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                    const SizedBox(height: kPaddingMedium),
+                    Align(
+                      alignment: Alignment.center,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const TextWidget(
+                          data: "Fechar",
+                          fontSize: kFontsizeStandard,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         );
       },
