@@ -1,13 +1,13 @@
-import 'package:desafio_guia_motel/components/text_component.dart';
-import 'package:desafio_guia_motel/constans/fontsize_constants.dart';
-import 'package:desafio_guia_motel/constans/paddigns_constans.dart';
+import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
+import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
+import 'package:desafio_guia_motel/constants/padding_constants.dart';
 import 'package:flutter/material.dart';
 
-class ReservationList extends StatelessWidget {
+class ReservationListComponent extends StatelessWidget {
   final List<Map<String, dynamic>> periods;
   final void Function(int index) onReserveTap;
 
-  const ReservationList({
+  const ReservationListComponent({
     super.key,
     required this.periods,
     required this.onReserveTap,
@@ -32,8 +32,8 @@ class ReservationList extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(16), // Bordas arredondadas maiores
+                borderRadius: BorderRadius.circular(
+                    kPaddingMedium), // Bordas arredondadas maiores
                 border: Border.all(
                   color: Colors.grey.shade300,
                   width: 0, // Borda mais visível
@@ -48,7 +48,7 @@ class ReservationList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Título com tempo
-                        TextWidget(
+                        TextComponent(
                           data: period['tempoFormatado'] ?? '',
                           fontSize: kFontsizeLarge, // Fonte maior
                           fontWeight: FontWeight.bold,
@@ -61,7 +61,7 @@ class ReservationList extends StatelessWidget {
                           children: [
                             // Preço com desconto (verde)
                             if (period['desconto'] != null)
-                              TextWidget(
+                              TextComponent(
                                 data:
                                     "R\$ ${period['valorTotal']?.toStringAsFixed(2)}",
                                 fontSize: kFontsizeMedium, // Tamanho ajustado
@@ -71,7 +71,7 @@ class ReservationList extends StatelessWidget {
                               const SizedBox(width: kPaddingSmall),
 
                             // Preço original (vermelho, riscado)
-                            TextWidget(
+                            TextComponent(
                               data:
                                   "R\$ ${period['valor']?.toStringAsFixed(2)}",
                               fontSize: kFontsizeMedium, // Tamanho ajustado
@@ -99,7 +99,7 @@ class ReservationList extends StatelessWidget {
                     icon: const Icon(
                       Icons.arrow_forward,
                       color: Colors.grey,
-                      size: 30, // Tamanho maior do ícone
+                      size: kFontsizeXLarge, // Tamanho maior do ícone
                     ),
                   ),
                 ],

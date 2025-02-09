@@ -1,6 +1,6 @@
-import 'package:desafio_guia_motel/components/text_component.dart';
-import 'package:desafio_guia_motel/constans/fontsize_constants.dart';
-import 'package:desafio_guia_motel/constans/paddigns_constans.dart';
+import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
+import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
+import 'package:desafio_guia_motel/constants/padding_constants.dart';
 import 'package:flutter/material.dart';
 
 class BarItensSuiteComponent extends StatelessWidget {
@@ -32,7 +32,7 @@ class BarItensSuiteComponent extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(kPaddingStandard),
         border: Border.all(
           color: Colors.grey.shade300,
           width: 0,
@@ -51,14 +51,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                       Icon(
                         Icons.more_horiz,
                         color: Colors.grey,
-                        size: iconSize + 8, // Tamanho ajustado
-                      ),
-                      const SizedBox(width: kPaddingSmall),
-                      TextWidget(
-                        data: "Ver todos",
-                        fontSize: kFontsizeStandard,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
+                        size: iconSize + kPaddingSmall,
                       ),
                     ],
                   ),
@@ -74,7 +67,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
                           Icons.device_unknown,
-                          size: 30,
+                          size: kFontsizeLarge,
                           color: Colors.grey,
                         ),
                       ),
@@ -95,18 +88,19 @@ class BarItensSuiteComponent extends StatelessWidget {
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(kPaddingMedium),
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
               final int rows = (items.length / 3).ceil();
-              final double calculatedHeight = rows * (popupIconSize + 48) + 200;
+              final double calculatedHeight =
+                  rows * (popupIconSize + kPaddingXLarge) + 200;
 
               return Container(
                 padding: const EdgeInsets.all(kPaddingMedium),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(kPaddingMedium),
                 ),
                 constraints: BoxConstraints(
                   maxHeight: calculatedHeight.clamp(200, constraints.maxHeight),
@@ -115,22 +109,17 @@ class BarItensSuiteComponent extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Center(
-                      child: TextWidget(
-                        data: "Itens disponíveis",
-                        fontSize: kFontsizeLarge,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade800,
+                    Padding(
+                      padding: const EdgeInsets.all(kPaddingMedium),
+                      child: Center(
+                        child: TextComponent(
+                          data: "Itens disponíveis",
+                          fontSize: kFontsizeLarge,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey.shade800,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: kPaddingSmall),
-                    const TextWidget(
-                      data: "Todos os itens disponíveis",
-                      fontSize: kFontsizeStandard,
-                      color: Colors.grey,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: kPaddingMedium),
                     Expanded(
                       child: GridView.builder(
                         gridDelegate:
@@ -154,13 +143,13 @@ class BarItensSuiteComponent extends StatelessWidget {
                                   errorBuilder: (context, error, stackTrace) =>
                                       const Icon(
                                     Icons.device_unknown,
-                                    size: 30,
+                                    size: kFontsizeLarge,
                                     color: Colors.grey,
                                   ),
                                 ),
                               ),
                               const SizedBox(height: kPaddingSmall),
-                              TextWidget(
+                              TextComponent(
                                 data: item['nome'] ?? '',
                                 fontSize: kFontsizeStandard,
                                 textAlign: TextAlign.center,
@@ -181,10 +170,10 @@ class BarItensSuiteComponent extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(kPaddingSmall),
                           ),
                         ),
-                        child: const TextWidget(
+                        child: const TextComponent(
                           data: "Fechar",
                           fontSize: kFontsizeStandard,
                           color: Colors.white,

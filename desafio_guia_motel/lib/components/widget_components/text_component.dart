@@ -1,7 +1,7 @@
-import 'package:desafio_guia_motel/constans/fontsize_constants.dart';
+import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:flutter/material.dart';
 
-class TextWidget extends StatelessWidget {
+class TextComponent extends StatelessWidget {
   // Texto a ser exibido
   final String data;
 
@@ -35,12 +35,12 @@ class TextWidget extends StatelessWidget {
   // Espessura da decoração (linha riscada ou sublinhada)
   final double? decorationThickness;
 
-  const TextWidget({
+  const TextComponent({
     super.key,
     required this.data,
     this.maxLines = 1,
     this.color,
-    this.fontSize = kFontsizeMedium,
+    this.fontSize = kFontsizeMedium, // Agora usa a constante
     this.fontWeight = FontWeight.normal,
     this.overflow = TextOverflow.ellipsis,
     this.textAlign = TextAlign.start,
