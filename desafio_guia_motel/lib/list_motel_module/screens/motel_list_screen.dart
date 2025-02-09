@@ -5,10 +5,10 @@ import 'package:desafio_guia_motel/components/widget_components/icon_component.d
 import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
+import 'package:desafio_guia_motel/list_motel_module/controllers/motel_service_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import '../controllers/motel_controller.dart';
 import '../models/guia_motel_models.dart';
 
 class MotelListScreen extends StatefulWidget {
@@ -61,7 +61,10 @@ class _MotelListScreenState extends State<MotelListScreen> {
                 Expanded(
                   child: Align(
                     alignment: Alignment.center,
-                    child: CustomToggleSwitch(),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: CustomToggleSwitch(),
+                    ),
                   ),
                 ),
                 IconButton(
@@ -116,36 +119,44 @@ class _MotelListScreenState extends State<MotelListScreen> {
           child: PagedListView<int, GuiaMoteisModel>(
             pagingController: _motelServiceController.pagingController,
             builderDelegate: PagedChildBuilderDelegate(
-              firstPageErrorIndicatorBuilder: (context) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const TextComponent(
-                      data: "Erro ao carregar dados.",
-                      fontSize: kFontsizeMedium,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                    ElevatedButton(
-                      onPressed: () => _motelServiceController.refreshList(),
-                      child: const TextComponent(
-                        data: "Tentar Novamente",
+              firstPageErrorIndicatorBuilder: (context) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const TextComponent(
+                        data: "Erro ao carregar dados.",
                         fontSize: kFontsizeMedium,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              noItemsFoundIndicatorBuilder: (context) => const Center(
-                child: TextComponent(
-                  data: "Nenhum motel encontrado!",
-                  fontSize: kFontsizeMedium,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _motelServiceController.refreshList();
+                          });
+                        },
+                        child: const TextComponent(
+                          data: "Tentar Novamente",
+                          fontSize: kFontsizeMedium,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              noItemsFoundIndicatorBuilder: (context) {
+                return const Center(
+                  child: TextComponent(
+                    data: "Nenhum motel encontrado!",
+                    fontSize: kFontsizeMedium,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                );
+              },
               itemBuilder: (context, motel, index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +201,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 800,
+                      height: 650,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: motel.suites.length,
@@ -212,6 +223,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                         SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: suite.fotos.map((foto) {
                                               return Padding(
                                                 padding: const EdgeInsets.only(
@@ -257,6 +269,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                         };
                                       }).toList(),
                                       iconSize: 40.0,
+                                      suiteName: suite.nome,
                                     ),
                                   ),
                                   ReservationListComponent(

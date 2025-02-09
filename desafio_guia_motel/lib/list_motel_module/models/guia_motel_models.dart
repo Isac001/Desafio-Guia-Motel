@@ -6,7 +6,8 @@ class GuiaMoteisModel {
   final int qtdFavoritos;
   final List<SuiteModel> suites;
 
-  GuiaMoteisModel({
+  // ignore: non_constant_identifier_names
+  GuiaMoteisModel.MotelGuideModel({
     required this.fantasia,
     required this.logo,
     required this.bairro,
@@ -16,7 +17,7 @@ class GuiaMoteisModel {
   });
 
   factory GuiaMoteisModel.fromJson(Map<String, dynamic> json) {
-    return GuiaMoteisModel(
+    return GuiaMoteisModel.MotelGuideModel(
       fantasia: json['fantasia'] ?? '',
       logo: json['logo'] ?? '',
       bairro: json['bairro'] ?? '',
@@ -45,8 +46,8 @@ class SuiteModel {
   final bool exibirQtdDisponiveis;
   final List<String> fotos;
   final List<ItemModel> itens;
-  final List<CategoriaItemModel> categoriaItens;
-  final List<PeriodoModel> periodos;
+  final List<ItemCategoryModel> categoriaItens;
+  final List<PeriodModel> periodos;
 
   SuiteModel({
     required this.nome,
@@ -66,10 +67,10 @@ class SuiteModel {
       fotos: List<String>.from(json['fotos'] ?? []),
       itens: (json['itens'] as List).map((i) => ItemModel.fromJson(i)).toList(),
       categoriaItens: (json['categoriaItens'] as List)
-          .map((c) => CategoriaItemModel.fromJson(c))
+          .map((c) => ItemCategoryModel.fromJson(c))
           .toList(),
       periodos: (json['periodos'] as List)
-          .map((p) => PeriodoModel.fromJson(p))
+          .map((p) => PeriodModel.fromJson(p))
           .toList(),
     );
   }
@@ -103,14 +104,14 @@ class ItemModel {
   }
 }
 
-class CategoriaItemModel {
+class ItemCategoryModel {
   final String nome;
   final String icone;
 
-  CategoriaItemModel({required this.nome, required this.icone});
+  ItemCategoryModel({required this.nome, required this.icone});
 
-  factory CategoriaItemModel.fromJson(Map<String, dynamic> json) {
-    return CategoriaItemModel(
+  factory ItemCategoryModel.fromJson(Map<String, dynamic> json) {
+    return ItemCategoryModel(
       nome: json['nome'] ?? '',
       icone: json['icone'] ?? '',
     );
@@ -124,14 +125,14 @@ class CategoriaItemModel {
   }
 }
 
-class PeriodoModel {
+class PeriodModel {
   final String tempoFormatado;
   final double valor;
   final double valorTotal;
   final bool temCortesia;
   final double? desconto;
 
-  PeriodoModel({
+  PeriodModel({
     required this.tempoFormatado,
     required this.valor,
     required this.valorTotal,
@@ -139,8 +140,8 @@ class PeriodoModel {
     this.desconto,
   });
 
-  factory PeriodoModel.fromJson(Map<String, dynamic> json) {
-    return PeriodoModel(
+  factory PeriodModel.fromJson(Map<String, dynamic> json) {
+    return PeriodModel(
       tempoFormatado: json['tempoFormatado'] ?? '',
       valor: (json['valor'] as num).toDouble(),
       valorTotal: (json['valorTotal'] as num).toDouble(),
