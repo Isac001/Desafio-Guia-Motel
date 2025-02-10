@@ -6,10 +6,12 @@ import 'package:flutter/material.dart';
 class BarItensSuiteComponent extends StatelessWidget {
   final List<Map<String, String>> items;
   final double iconSize;
+  final String suiteName;
 
   const BarItensSuiteComponent({
     super.key,
     required this.items,
+    required this.suiteName,
     this.iconSize = 20.0,
   });
 
@@ -45,15 +47,11 @@ class BarItensSuiteComponent extends StatelessWidget {
 
           return isMoreButton
               ? GestureDetector(
-                  onTap: () => _showAllIconsPopup(context),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.more_horiz,
-                        color: Colors.grey,
-                        size: iconSize + kPaddingSmall,
-                      ),
-                    ],
+                  onTap: () => _showPopup(context),
+                  child: Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey,
+                    size: iconSize + kPaddingSmall,
                   ),
                 )
               : Column(
@@ -80,53 +78,56 @@ class BarItensSuiteComponent extends StatelessWidget {
     );
   }
 
-  void _showAllIconsPopup(BuildContext context) {
-    const double popupIconSize = 35.0;
+  void _showPopup(BuildContext context) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(kPaddingMedium),
           ),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final int rows = (items.length / 3).ceil();
-              final double calculatedHeight =
-                  rows * (popupIconSize + kPaddingXLarge) + 200;
-
-              return Container(
-                padding: const EdgeInsets.all(kPaddingMedium),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(kPaddingMedium),
-                ),
-                constraints: BoxConstraints(
-                  maxHeight: calculatedHeight.clamp(200, constraints.maxHeight),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(kPaddingMedium),
-                      child: Center(
-                        child: TextComponent(
-                          data: "Itens disponíveis",
-                          fontSize: kFontsizeLarge,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade800,
-                        ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height *
+                  0.8, // Máximo 80% da tela
+              minWidth:
+                  MediaQuery.of(context).size.width * 0.6, // Largura mínima
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(kPaddingMedium),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Título
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: kPaddingMedium),
+                    child: Center(
+                      child: TextComponent(
+                        maxLines: 4,
+                        textAlign: TextAlign.center,
+                        data: "Itens disponíveis da $suiteName",
+                        fontSize: kFontsizeLarge,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey.shade800,
                       ),
                     ),
-                    Expanded(
+                  ),
+
+                  // Conteúdo com Scroll
+                  Flexible(
+                    child: SingleChildScrollView(
                       child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: kPaddingSmall,
-                          mainAxisSpacing: kPaddingSmall,
+                          crossAxisCount: 2, // 2 itens por linha
+                          crossAxisSpacing: kPaddingMedium,
+                          mainAxisSpacing: kPaddingMedium,
+                          childAspectRatio: 1, // Mantém proporção equilibrada
                         ),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
@@ -135,8 +136,8 @@ class BarItensSuiteComponent extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                height: popupIconSize,
-                                width: popupIconSize,
+                                height: 50.0,
+                                width: 50.0,
                                 child: Image.network(
                                   item['icone'] ?? '',
                                   fit: BoxFit.contain,
@@ -152,38 +153,41 @@ class BarItensSuiteComponent extends StatelessWidget {
                               TextComponent(
                                 data: item['nome'] ?? '',
                                 fontSize: kFontsizeStandard,
-                                textAlign: TextAlign.center,
                                 color: Colors.grey.shade800,
+                                textAlign: TextAlign.center,
                               ),
                             ],
                           );
                         },
                       ),
                     ),
-                    const SizedBox(height: kPaddingMedium),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(kPaddingSmall),
-                          ),
-                        ),
-                        child: const TextComponent(
-                          data: "Fechar",
-                          fontSize: kFontsizeStandard,
-                          color: Colors.white,
+                  ),
+
+                  const SizedBox(height: kPaddingMedium),
+
+                  // Botão Fechar
+                  Align(
+                    alignment: Alignment.center,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kPaddingSmall),
                         ),
                       ),
+                      child: const TextComponent(
+                        data: "Fechar",
+                        fontSize: kFontsizeStandard,
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },

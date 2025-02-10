@@ -5,17 +5,24 @@ import '../models/guia_motel_models.dart';
 import '../services/motel_service.dart';
 
 class MotelServiceController extends GetxController {
-  
-
   RxList<GuiaMoteisModel> moteis = <GuiaMoteisModel>[].obs;
-
   final PagingController<int, GuiaMoteisModel> pagingController =
       PagingController<int, GuiaMoteisModel>(firstPageKey: 0);
 
-  final MotelService _motelService = MotelService();
-
+  final MotelService _motelService;
   final NumberFormat currencyFormatter =
       NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+
+  @override
+  void onInit() {
+    super.onInit();
+    pagingController.addPageRequestListener((pageKey) async {
+      await lazyLoad(pageKey);
+    });
+  }
+
+  MotelServiceController({required MotelService motelService})
+      : _motelService = motelService;
 
   Future<void> lazyLoad(int pageKey) async {
     try {
@@ -24,9 +31,18 @@ class MotelServiceController extends GetxController {
 
       if (fetchedMoteis.isEmpty) {
         pagingController.appendLastPage([]);
+        return;
+      }
+
+      final List<GuiaMoteisModel> newMoteis = fetchedMoteis.where((motel) {
+        return !moteis.any((existing) => existing.fantasia == motel.fantasia);
+      }).toList();
+
+      if (newMoteis.isNotEmpty) {
+        pagingController.appendPage(newMoteis, pageKey + 1);
+        moteis.addAll(newMoteis);
       } else {
-        pagingController.appendLastPage(fetchedMoteis);
-        moteis.addAll(fetchedMoteis);
+        pagingController.appendLastPage([]); 
       }
     } catch (error) {
       pagingController.error = error;
@@ -34,16 +50,7 @@ class MotelServiceController extends GetxController {
   }
 
   Future<void> refreshList() async {
-    return Future.sync(() {
-      moteis.clear();
-      pagingController.refresh();
-    });
-  }
-
-  void onInitt() {
-    super.onInit();
-    pagingController.addPageRequestListener((pageKey) async {
-      await lazyLoad(pageKey);
-    });
+    moteis.clear();
+    pagingController.refresh();
   }
 }
