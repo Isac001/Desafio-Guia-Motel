@@ -8,12 +8,12 @@ import 'package:desafio_guia_motel/constants/padding_constants.dart';
 
 /// A stateless widget that displays a list of reservation periods.
 /// Each item can be tapped to open a reservation popup.
-class ReserveListComponent extends StatelessWidget {
+class ReserveSuiteComponent extends StatelessWidget {
   /// List of reservation periods containing formatted time, price, and discounts.
   final List<Map<String, dynamic>> periods;
 
   /// Constructor for ReservationListComponent
-  const ReserveListComponent({super.key, required this.periods});
+  const ReserveSuiteComponent({super.key, required this.periods});
 
   @override
   Widget build(BuildContext context) {

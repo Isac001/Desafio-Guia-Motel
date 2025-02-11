@@ -1,11 +1,15 @@
+// Importing necessary packages and components
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:desafio_guia_motel/components/fields_components/reserve_list_component.dart';
+import 'package:desafio_guia_motel/components/fields_components/reserve_suite_component.dart';
 
 void main() {
+  // Grouping tests related to the ReservationListComponent
   group('ReservationListComponent', () {
+    // Variable to store test periods
     late List<Map<String, dynamic>> testPeriods;
 
+    // Setup function to initialize test data before each test
     setUp(() {
       testPeriods = [
         {
@@ -29,25 +33,27 @@ void main() {
       ];
     });
 
-    testWidgets('Renderiza corretamente os períodos e valores',
+    // Test to check if periods and values are displayed correctly
+    testWidgets('Renders periods and values correctly',
         (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveListComponent(periods: testPeriods),
+            body: ReserveSuiteComponent(periods: testPeriods),
           ),
         ),
       );
 
-      // Verifica se os textos dos períodos estão na tela
+      // Checking if the period texts are displayed on screen
       expect(find.text('2h'), findsOneWidget);
       expect(find.text('4h'), findsOneWidget);
       expect(find.text('12 horas'), findsOneWidget);
 
-      // 🔹 Verifica se "Pernoite" está presente, independentemente do formato exato
+      // 🔹 Checking if "Pernoite" is present, regardless of exact format
       expect(find.textContaining('Pernoite'), findsOneWidget);
 
-      // Verifica os valores e descontos
+      // Checking if financial values and discounts are displayed correctly
       expect(find.text('R\$ 100.00'), findsOneWidget);
       expect(find.text('R\$ 80.00'), findsOneWidget);
       expect(find.text('R\$ 150.00'), findsOneWidget);
@@ -55,51 +61,57 @@ void main() {
       expect(find.text('R\$ 180.00'), findsOneWidget);
     });
 
-    testWidgets('Abre o popup de reserva ao tocar em um período',
+    // Test to check if the reservation popup opens when tapping on a period
+    testWidgets('Opens reservation popup when tapping a period',
         (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveListComponent(periods: testPeriods),
+            body: ReserveSuiteComponent(periods: testPeriods),
           ),
         ),
       );
 
-      // Simula um toque no primeiro período ("2h")
+      // Simulating a tap on the first period ("2h")
       await tester.tap(find.text('2h'));
       await tester.pumpAndSettle();
 
-      // 🔹 Verifica se o popup de reserva foi aberto
+      // Checking if the reservation popup opens
       expect(find.byType(Dialog), findsOneWidget);
 
-      // Fecha o popup
+      // Closing the popup
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
 
+      // Expectation: The popup should be closed
       expect(find.byType(Dialog), findsNothing);
     });
 
-    testWidgets('Abre o popup ao clicar no botão de seta',
+    // Test to check if the popup opens when clicking the arrow button
+    testWidgets('Opens popup when clicking the arrow button',
         (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveListComponent(periods: testPeriods),
+            body: ReserveSuiteComponent(periods: testPeriods),
           ),
         ),
       );
 
-      // 🔹 Toca apenas no primeiro botão de seta "→"
+      // Simulating a tap on the first arrow button "→"
       await tester.tap(find.byIcon(Icons.arrow_forward).first);
       await tester.pumpAndSettle();
 
-      // 🔹 Verifica se o popup foi aberto
+      // Checking if the popup opens
       expect(find.byType(Dialog), findsOneWidget);
 
-      // Fecha o popup
+      // Closing the popup
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
 
+      // xpectation: The popup should be closed
       expect(find.byType(Dialog), findsNothing);
     });
   });

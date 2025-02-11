@@ -1,5 +1,5 @@
 import 'package:desafio_guia_motel/components/fields_components/bar_itens_suite_component.dart';
-import 'package:desafio_guia_motel/components/fields_components/reserve_list_component.dart';
+import 'package:desafio_guia_motel/components/fields_components/reserve_suite_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/custom_switch_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
@@ -310,7 +310,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                   ),
 
                                   // Reserve Camps
-                                  ReserveListComponent(
+                                  ReserveSuiteComponent(
                                     periods: suite.periodos.map((periodo) {
                                       return {
                                         'tempoFormatado':
