@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'motel_service_test.mocks.dart';
 
-
 @GenerateMocks([Dio])
 void main() {
   late MockDio mockDio;
@@ -19,7 +18,8 @@ void main() {
   });
 
   group('MotelService - fetchGuiaMoteis', () {
-    test('Deve retornar uma lista de GuiaMoteisModel quando a resposta for 200', () async {
+    test('Deve retornar uma lista de GuiaMoteisModel quando a resposta for 200',
+        () async {
       final mockJsonResponse = {
         "sucesso": true,
         "data": {
@@ -46,12 +46,13 @@ void main() {
 
       final result = await motelService.fetchGuiaMoteis();
 
-      expect(result, isA<List<GuiaMoteisModel>>());
+      expect(result, isA<List<MotelGuideModel>>());
       expect(result.length, 1);
       expect(result.first.fantasia, "Motel Teste");
     });
 
-    test('Deve retornar erro quando a API retorna um status diferente de 200', () async {
+    test('Deve retornar erro quando a API retorna um status diferente de 200',
+        () async {
       final response = Response(
         requestOptions: RequestOptions(path: ''),
         statusCode: 404,
@@ -76,7 +77,8 @@ void main() {
           throwsA(contains("Erro: Resposta da API não é um JSON válido.")));
     });
 
-    test('Deve retornar erro quando a estrutura do JSON é inesperada', () async {
+    test('Deve retornar erro quando a estrutura do JSON é inesperada',
+        () async {
       final response = Response(
         requestOptions: RequestOptions(path: ''),
         data: {"sucesso": true, "data": {}},

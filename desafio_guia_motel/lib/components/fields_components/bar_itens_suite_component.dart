@@ -1,14 +1,16 @@
 import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
+import 'package:desafio_guia_motel/constants/radius_constants.dart';
+import 'package:desafio_guia_motel/constants/theme_color.dart';
 import 'package:flutter/material.dart';
 
-class BarItensSuiteComponent extends StatelessWidget {
+class BarItensSwitchComponent extends StatelessWidget {
   final List<Map<String, String>> items;
   final double iconSize;
   final String suiteName;
 
-  const BarItensSuiteComponent({
+  const BarItensSwitchComponent({
     super.key,
     required this.items,
     required this.suiteName,
@@ -33,10 +35,10 @@ class BarItensSuiteComponent extends StatelessWidget {
         horizontal: kPaddingMedium,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(kPaddingStandard),
+        color: ThemeColor.whiteColor,
+        borderRadius: BorderRadius.circular(kRadiusStandard),
         border: Border.all(
-          color: Colors.grey.shade300,
+          color: ThemeColor.greyColor,
           width: 0,
         ),
       ),
@@ -50,7 +52,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                   onTap: () => _showPopup(context),
                   child: Icon(
                     Icons.more_horiz,
-                    color: Colors.grey,
+                    color: ThemeColor.greyColor,
                     size: iconSize + kPaddingSmall,
                   ),
                 )
@@ -66,7 +68,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                             const Icon(
                           Icons.device_unknown,
                           size: kFontsizeLarge,
-                          color: Colors.grey,
+                          color: ThemeColor.greyColor,
                         ),
                       ),
                     ),
@@ -84,23 +86,20 @@ class BarItensSuiteComponent extends StatelessWidget {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.white,
+          backgroundColor: ThemeColor.whiteColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(kPaddingMedium),
+            borderRadius: BorderRadius.circular(kRadiusMedium),
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height *
-                  0.8, // Máximo 80% da tela
-              minWidth:
-                  MediaQuery.of(context).size.width * 0.6, // Largura mínima
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              minWidth: MediaQuery.of(context).size.width * 0.6,
             ),
             child: Padding(
               padding: const EdgeInsets.all(kPaddingMedium),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Título
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(vertical: kPaddingMedium),
@@ -111,12 +110,10 @@ class BarItensSuiteComponent extends StatelessWidget {
                         data: "Itens disponíveis da $suiteName",
                         fontSize: kFontsizeLarge,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade800,
+                        color: ThemeColor.secundaryColor,
                       ),
                     ),
                   ),
-
-                  // Conteúdo com Scroll
                   Flexible(
                     child: SingleChildScrollView(
                       child: GridView.builder(
@@ -124,10 +121,10 @@ class BarItensSuiteComponent extends StatelessWidget {
                         physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 2 itens por linha
+                          crossAxisCount: 2,
                           crossAxisSpacing: kPaddingMedium,
                           mainAxisSpacing: kPaddingMedium,
-                          childAspectRatio: 1, // Mantém proporção equilibrada
+                          childAspectRatio: 1,
                         ),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
@@ -145,7 +142,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                                       const Icon(
                                     Icons.device_unknown,
                                     size: kFontsizeLarge,
-                                    color: Colors.grey,
+                                    color: ThemeColor.greyColor,
                                   ),
                                 ),
                               ),
@@ -153,7 +150,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                               TextComponent(
                                 data: item['nome'] ?? '',
                                 fontSize: kFontsizeStandard,
-                                color: Colors.grey.shade800,
+                                color: ThemeColor.greyColor,
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -162,10 +159,7 @@ class BarItensSuiteComponent extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: kPaddingMedium),
-
-                  // Botão Fechar
                   Align(
                     alignment: Alignment.center,
                     child: ElevatedButton(
@@ -173,15 +167,15 @@ class BarItensSuiteComponent extends StatelessWidget {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: ThemeColor.redColor,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(kPaddingSmall),
+                          borderRadius: BorderRadius.circular(kRadiusSmall),
                         ),
                       ),
                       child: const TextComponent(
                         data: "Fechar",
                         fontSize: kFontsizeStandard,
-                        color: Colors.white,
+                        color: ThemeColor.whiteColor,
                       ),
                     ),
                   ),

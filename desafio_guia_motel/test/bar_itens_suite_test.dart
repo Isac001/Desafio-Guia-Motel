@@ -21,7 +21,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: BarItensSuiteComponent(
+            body: BarItensSwitchComponent(
               items: testItems,
               suiteName: testSuiteName,
             ),
@@ -29,10 +29,9 @@ void main() {
         ),
       );
 
-      expect(
-          find.text(testSuiteName), findsNothing); 
+      expect(find.text(testSuiteName), findsNothing);
 
-      expect(find.byType(Image), findsNWidgets(3)); 
+      expect(find.byType(Image), findsNWidgets(3));
     });
 
     testWidgets('Exibe botão "Ver todos" quando há mais de 3 itens',
@@ -43,7 +42,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: BarItensSuiteComponent(
+            body: BarItensSwitchComponent(
               items: extendedItems,
               suiteName: testSuiteName,
             ),
@@ -62,7 +61,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: BarItensSuiteComponent(
+            body: BarItensSwitchComponent(
               items: extendedItems,
               suiteName: testSuiteName,
             ),

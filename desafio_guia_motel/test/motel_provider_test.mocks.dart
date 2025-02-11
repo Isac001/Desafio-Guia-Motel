@@ -28,7 +28,7 @@ import 'package:mockito/mockito.dart' as _i1;
 
 class _FakeDio_0 extends _i1.SmartFake implements _i2.Dio {
   _FakeDio_0(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
+      : super(parent, parentInvocation);
 }
 
 /// A class which mocks [MotelService].
@@ -40,20 +40,17 @@ class MockMotelService extends _i1.Mock implements _i3.MotelService {
   }
 
   @override
-  _i2.Dio get dio =>
-      (super.noSuchMethod(
-            Invocation.getter(#dio),
-            returnValue: _FakeDio_0(this, Invocation.getter(#dio)),
-          )
-          as _i2.Dio);
+  _i2.Dio get dio => (super.noSuchMethod(
+        Invocation.getter(#dio),
+        returnValue: _FakeDio_0(this, Invocation.getter(#dio)),
+      ) as _i2.Dio);
 
   @override
-  _i4.Future<List<_i5.GuiaMoteisModel>> fetchGuiaMoteis() =>
+  _i4.Future<List<_i5.MotelGuideModel>> fetchGuiaMoteis() =>
       (super.noSuchMethod(
-            Invocation.method(#fetchGuiaMoteis, []),
-            returnValue: _i4.Future<List<_i5.GuiaMoteisModel>>.value(
-              <_i5.GuiaMoteisModel>[],
-            ),
-          )
-          as _i4.Future<List<_i5.GuiaMoteisModel>>);
+        Invocation.method(#fetchGuiaMoteis, []),
+        returnValue: _i4.Future<List<_i5.MotelGuideModel>>.value(
+          <_i5.MotelGuideModel>[],
+        ),
+      ) as _i4.Future<List<_i5.MotelGuideModel>>);
 }
