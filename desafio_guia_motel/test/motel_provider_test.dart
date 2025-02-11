@@ -19,7 +19,7 @@ void main() {
   group('MotelProvider - lazyLoad', () {
     test('Deve carregar uma lista de motéis e adicionar à paginação', () async {
       final mockMoteis = [
-        GuiaMoteisModel.MotelGuideModel(
+        MotelGuideModel.MotelGuideModel(
           fantasia: "Motel Teste",
           logo: "logo_url",
           bairro: "Centro",
@@ -29,7 +29,8 @@ void main() {
         ),
       ];
 
-      when(mockMotelService.fetchGuiaMoteis()).thenAnswer((_) async => mockMoteis);
+      when(mockMotelService.fetchGuiaMoteis())
+          .thenAnswer((_) async => mockMoteis);
 
       await motelProvider.lazyLoad(0);
 
@@ -39,7 +40,8 @@ void main() {
     });
 
     test('Deve lidar com erro de API corretamente', () async {
-      when(mockMotelService.fetchGuiaMoteis()).thenThrow(Exception("Erro na API"));
+      when(mockMotelService.fetchGuiaMoteis())
+          .thenThrow(Exception("Erro na API"));
 
       await motelProvider.lazyLoad(0);
 
@@ -50,7 +52,7 @@ void main() {
 
   group('MotelProvider - refreshList', () {
     test('Deve limpar a lista e reiniciar a paginação', () async {
-      motelProvider.motels.add(GuiaMoteisModel.MotelGuideModel(
+      motelProvider.motels.add(MotelGuideModel.MotelGuideModel(
         fantasia: "Motel Temporário",
         logo: "logo_url",
         bairro: "Sul",

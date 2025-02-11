@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:desafio_guia_motel/components/fields_components/reservation_list_component.dart';
+import 'package:desafio_guia_motel/components/fields_components/reserve_list_component.dart';
 
 void main() {
   group('ReservationListComponent', () {
@@ -29,11 +29,12 @@ void main() {
       ];
     });
 
-    testWidgets('Renderiza corretamente os períodos e valores', (WidgetTester tester) async {
+    testWidgets('Renderiza corretamente os períodos e valores',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReservationListComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );
@@ -54,11 +55,12 @@ void main() {
       expect(find.text('R\$ 180.00'), findsOneWidget);
     });
 
-    testWidgets('Abre o popup de reserva ao tocar em um período', (WidgetTester tester) async {
+    testWidgets('Abre o popup de reserva ao tocar em um período',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReservationListComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );
@@ -77,11 +79,12 @@ void main() {
       expect(find.byType(Dialog), findsNothing);
     });
 
-    testWidgets('Abre o popup ao clicar no botão de seta', (WidgetTester tester) async {
+    testWidgets('Abre o popup ao clicar no botão de seta',
+        (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReservationListComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );

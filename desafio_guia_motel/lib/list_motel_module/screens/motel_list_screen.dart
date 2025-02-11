@@ -1,16 +1,18 @@
 import 'package:desafio_guia_motel/components/fields_components/bar_itens_suite_component.dart';
-import 'package:desafio_guia_motel/components/fields_components/reservation_list_component.dart';
+import 'package:desafio_guia_motel/components/fields_components/reserve_list_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/custom_switch_component.dart';
-import 'package:desafio_guia_motel/components/widget_components/icon_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
+import 'package:desafio_guia_motel/constants/radius_constants.dart';
+import 'package:desafio_guia_motel/constants/theme_color.dart';
 import 'package:desafio_guia_motel/list_motel_module/providers/motel_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import '../models/guia_motel_models.dart';
 
+// Stateful widget representing the Motel List screen
 class MotelListScreen extends StatefulWidget {
   const MotelListScreen({super.key});
 
@@ -19,8 +21,10 @@ class MotelListScreen extends StatefulWidget {
 }
 
 class _MotelListScreenState extends State<MotelListScreen> {
+  // Default selected zone
   String selectedZone = 'Zona Norte';
 
+  // List of available zones
   final List<String> zones = [
     'Zona Norte',
     'Zona Sul',
@@ -29,9 +33,12 @@ class _MotelListScreenState extends State<MotelListScreen> {
     'Centro'
   ];
 
+  // Inition Fuctions
   @override
   void initState() {
     super.initState();
+
+    // Adding a listener for pagination after the first frame is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final motelProvider = Provider.of<MotelProvider>(context, listen: false);
       motelProvider.pagingController.addPageRequestListener((pageKey) async {
@@ -42,21 +49,29 @@ class _MotelListScreenState extends State<MotelListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Getting screen dimensions
     final motelProvider = Provider.of<MotelProvider>(context, listen: false);
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.red.shade700,
+      backgroundColor: ThemeColor.primaryColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.red.shade700,
-        toolbarHeight: 120,
+        backgroundColor: ThemeColor.primaryColor,
+        toolbarHeight: screenHeight * 0.125,
         title: Column(
           children: [
+            // Top navigation row with menu, switch, and search
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  icon: const IconWidget(icon: Icons.menu, size: 28),
+                  icon: const Icon(
+                    Icons.menu,
+                    size: kFontsizeXLarge,
+                    color: ThemeColor.whiteColor,
+                  ),
                   onPressed: () {},
                 ),
                 Expanded(
@@ -64,28 +79,32 @@ class _MotelListScreenState extends State<MotelListScreen> {
                     alignment: Alignment.center,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: CustomSwitchComponent(),
+                      child: const CustomSwitchComponent(),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const IconWidget(icon: Icons.search, size: 28),
+                  icon: const Icon(Icons.search,
+                      size: kFontsizeXLarge, color: ThemeColor.whiteColor),
                   onPressed: () {},
                 ),
               ],
             ),
             const SizedBox(height: kPaddingSM),
+
+            // Zone selection dropdown
             DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: selectedZone,
-                icon: const IconWidget(icon: Icons.arrow_drop_down),
-                dropdownColor: Colors.red.shade700,
+                icon: const Icon(Icons.arrow_drop_down,
+                    color: ThemeColor.whiteColor),
+                dropdownColor: ThemeColor.primaryColor,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: ThemeColor.whiteColor,
                   fontSize: kFontsizeStandard,
                   fontWeight: FontWeight.bold,
                 ),
-                borderRadius: BorderRadius.circular(kPaddingSM),
+                borderRadius: BorderRadius.circular(kRadiusMedium),
                 items: zones.map((zone) {
                   return DropdownMenuItem<String>(
                     value: zone,
@@ -93,7 +112,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                       data: zone,
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: ThemeColor.whiteColor,
                     ),
                   );
                 }).toList(),
@@ -107,17 +126,21 @@ class _MotelListScreenState extends State<MotelListScreen> {
           ],
         ),
       ),
+
+      // Body container with rounded borders and light gray background
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.grey.shade50,
+          color: ThemeColor.lightGreyColor,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(kPaddingMedium),
-            topRight: Radius.circular(kPaddingMedium),
+            topLeft: Radius.circular(kRadiusMedium),
+            topRight: Radius.circular(kRadiusMedium),
           ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(kPaddingMedium),
-          child: PagedListView<int, GuiaMoteisModel>(
+
+          // Paginated list of moteis
+          child: PagedListView<int, MotelGuideModel>(
             pagingController: motelProvider.pagingController,
             builderDelegate: PagedChildBuilderDelegate(
               firstPageErrorIndicatorBuilder: (context) {
@@ -129,7 +152,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                         data: "Erro ao carregar dados.",
                         fontSize: kFontsizeMedium,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: ThemeColor.secundaryColor,
                       ),
                       ElevatedButton(
                         onPressed: () {
@@ -137,11 +160,14 @@ class _MotelListScreenState extends State<MotelListScreen> {
                             motelProvider.refreshList();
                           });
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeColor.primaryColor,
+                        ),
                         child: const TextComponent(
                           data: "Tentar Novamente",
                           fontSize: kFontsizeMedium,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: ThemeColor.whiteColor,
                         ),
                       ),
                     ],
@@ -154,10 +180,12 @@ class _MotelListScreenState extends State<MotelListScreen> {
                     data: "Nenhum motel encontrado!",
                     fontSize: kFontsizeMedium,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: ThemeColor.secundaryColor,
                   ),
                 );
               },
+
+              // Building each motel item in the list
               itemBuilder: (context, motel, index) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,8 +197,8 @@ class _MotelListScreenState extends State<MotelListScreen> {
                           ClipOval(
                             child: Image.network(
                               motel.logo,
-                              height: 70,
-                              width: 70,
+                              height: screenHeight * 0.1,
+                              width: screenHeight * 0.1,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -182,42 +210,49 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                 data: motel.fantasia,
                                 fontSize: kFontsizeMedium,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: 'Times New Roman',
+                                color: ThemeColor.secundaryColor,
                               ),
                               TextComponent(
                                 data: motel.bairro,
                                 fontSize: kFontsizeStandard,
-                                color: Colors.grey.shade700,
+                                color: ThemeColor.greyColor,
                               ),
                               TextComponent(
                                 data:
                                     "${motel.distancia.toStringAsFixed(2)} km",
                                 fontSize: kFontsizeStandard,
-                                color: Colors.grey.shade700,
+                                color: ThemeColor.greyColor,
                               ),
                             ],
                           ),
                         ],
                       ),
                     ),
+
+                    // List of available suites
                     SizedBox(
-                      height: 730,
+                      height: screenHeight * 0.9,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: motel.suites.length,
                         itemBuilder: (context, suiteIndex) {
                           final suite = motel.suites[suiteIndex];
-
                           return Padding(
                             padding: const EdgeInsets.only(right: kPaddingSM),
                             child: SizedBox(
-                              width: 340,
+                              width: screenWidth * 0.85,
                               child: Column(
                                 children: [
                                   Card(
                                     elevation: 0,
-                                    color: Colors.white,
+                                    color: ThemeColor.whiteColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(kRadiusSmall),
+                                      side: const BorderSide(
+                                          color: ThemeColor.greyColor,
+                                          width: 0.3),
+                                    ),
                                     child: Column(
                                       children: [
                                         SingleChildScrollView(
@@ -231,11 +266,11 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          kPaddingSmall),
+                                                          kRadiusSmall),
                                                   child: Image.network(
                                                     foto,
-                                                    height: 270,
-                                                    width: 300,
+                                                    height: screenHeight * 0.34,
+                                                    width: screenWidth * 0.7,
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
@@ -253,27 +288,29 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                             textAlign: TextAlign.center,
                                             color: Colors.black,
                                             fontFamily: 'Times New Roman',
-                                            maxLines: 4,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: kPaddingSmall - 4),
-                                    child: BarItensSuiteComponent(
-                                      items: suite.categoriaItens.map((item) {
-                                        return {
-                                          'icone': item.icone,
-                                          'nome': item.nome,
-                                        };
-                                      }).toList(),
-                                      iconSize: 40.0,
-                                      suiteName: suite.nome,
-                                    ),
+
+                                  // Bar of Items available
+                                  BarItensSwitchComponent(
+                                    items: suite.categoriaItens.map((item) {
+                                      return {
+                                        'icone': item.icone,
+                                        'nome': item.nome,
+                                      };
+                                    }).toList(),
+                                    iconSize: screenWidth * 0.1,
+                                    suiteName: suite.nome,
                                   ),
-                                  ReservationListComponent(
+                                  const SizedBox(
+                                    height: kPaddingSmall * 0.5,
+                                  ),
+
+                                  // Reserve Camps
+                                  ReserveListComponent(
                                     periods: suite.periodos.map((periodo) {
                                       return {
                                         'tempoFormatado':
