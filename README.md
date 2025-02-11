@@ -20,7 +20,7 @@ The project requires two additional Git repositories besides this one. First, th
 
 - **Step 2:** Open the cloned folder by running:
     ```bash
-    cd desafio_guia_moteis
+    cd desafio_guia_motel
     ```
 
 - **Step 3:** Get all dependencies:
