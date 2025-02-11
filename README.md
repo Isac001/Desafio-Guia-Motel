@@ -15,12 +15,12 @@ The project requires two additional Git repositories besides this one. First, th
 
 - **Step 1:** Open a terminal and run the following command:
     ```bash
-    git clone https://github.com/IART-Jaguaribe/Desafio-Guia-de-Moteis.git DesafioGuiaMoteis
+    git clone https://github.com/Isac001/Desafio-Guia-Motel.git DesafioGuiaMotei
     ```
 
 - **Step 2:** Open the cloned folder by running:
     ```bash
-    cd DesafioGuiaMoteis
+    cd desafio_guia_moteis
     ```
 
 - **Step 3:** Get all dependencies:
