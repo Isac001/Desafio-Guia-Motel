@@ -28,13 +28,13 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
   Widget build(BuildContext context) {
     /// Main container that wraps the switch component.
     return Container(
-      height: kPaddingXXLarge - kPaddingSmall, 
-      width: switchWidth, 
+      height: kPaddingXXLarge - kPaddingSmall,
+      width: switchWidth,
       decoration: BoxDecoration(
-        color: ThemeColor.whiteColor, 
-        borderRadius: BorderRadius.circular(kRadiusLarge), 
+        color: ThemeColor.whiteColor,
+        borderRadius: BorderRadius.circular(kRadiusLarge),
         border: Border.all(
-          color: ThemeColor.redColor, 
+          color: ThemeColor.primaryColor,
           width: 1.5,
         ),
       ),
@@ -62,17 +62,19 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
                     /// Flash icon for "Go Now" button
                     Icon(
                       Icons.flash_on,
-                      color: isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
-                      size: kFontsizeStandard, 
+                      color:
+                          isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      size: kFontsizeStandard,
                     ),
                     const SizedBox(width: kPaddingSmall),
-                    
+
                     /// Text for "Go Now" button
                     TextComponent(
                       data: "ir agora",
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color: isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color:
+                          isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
                     ),
                   ],
                 ),
@@ -101,17 +103,19 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
                     /// Calendar icon for "Go Another Day" button
                     Icon(
                       Icons.calendar_today,
-                      color: !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
-                      size: kFontsizeStandard, 
+                      color:
+                          !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      size: kFontsizeStandard,
                     ),
                     const SizedBox(width: kPaddingSmall),
-                    
+
                     /// Text for "Go Another Day" button
                     TextComponent(
                       data: "ir outro dia",
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color: !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color:
+                          !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
                     ),
                   ],
                 ),

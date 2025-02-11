@@ -1,11 +1,15 @@
+// Importing necessary packages and components
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:desafio_guia_motel/components/fields_components/reserve_popup_component.dart';
 
 void main() {
+  // Grouping tests related to the ReservationPopup component
   group('ReservationPopup', () {
+    // Variable to store test period details
     late Map<String, dynamic> testPeriod;
 
+    // Setup function to initialize test period before each test
     setUp(() {
       testPeriod = {
         'tempoFormatado': '12 horas',
@@ -15,7 +19,10 @@ void main() {
       };
     });
 
-    testWidgets('Renderiza corretamente as informações da reserva', (WidgetTester tester) async {
+    // Test to verify that the reservation popup displays correct information
+    testWidgets('Renders reservation details correctly',
+        (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -24,24 +31,24 @@ void main() {
         ),
       );
 
-      // 🔹 Depuração: imprime todos os textos na tela se falhar
+      // 🔹 Debugging: Prints all text widgets in case of failure
       final allTexts = find.byType(Text);
       final textWidgets = tester.widgetList<Text>(allTexts);
       for (final text in textWidgets) {
-        debugPrint("Encontrado texto: ${text.data}");
+        debugPrint("Found text: ${text.data}");
       }
 
-      // 🔹 Verifica se o período é exibido corretamente
+      // 🔹 Checking if the period information is displayed correctly
       expect(find.text('Início do período'), findsOneWidget);
       expect(find.text('IMEDIATO'), findsOneWidget);
       expect(find.text('Período'), findsOneWidget);
       expect(find.text('12 horas'), findsOneWidget);
 
-      // 🔹 Verifica se os valores financeiros aparecem corretamente
+      // 🔹 Checking if financial values are displayed correctly
       expect(find.text('R\$ 200.00'), findsOneWidget);
       expect(find.text('R\$ 180.00'), findsOneWidget);
 
-      // 🔹 Verifica se o desconto aparece corretamente (novo método flexível)
+      // 🔹 Checking if the discount is displayed correctly
       expect(
         find.byWidgetPredicate((widget) =>
             widget is Text &&
@@ -50,12 +57,15 @@ void main() {
         findsOneWidget,
       );
 
-      // 🔹 Verifica se as etapas de pagamento aparecem corretamente
+      // 🔹 Checking if payment instructions are displayed correctly
       expect(find.textContaining('Pague agora para reservar'), findsOneWidget);
       expect(find.textContaining('Pague o restante no motel'), findsOneWidget);
     });
 
-    testWidgets('Fecha o popup ao clicar no botão de fechar', (WidgetTester tester) async {
+    // Test to verify that the popup closes when clicking the close button
+    testWidgets('Closes popup when clicking the close button',
+        (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -64,15 +74,18 @@ void main() {
         ),
       );
 
-      // 🔹 Simula um clique no botão de fechar
+      // 🔹 Simulating a tap on the close button
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
 
-      // 🔹 O popup deve desaparecer da tela
+      // 🔹 Expectation: The popup should no longer be present
       expect(find.byType(Dialog), findsNothing);
     });
 
-    testWidgets('Fecha o popup ao clicar no botão "Reservar agora"', (WidgetTester tester) async {
+    // Test to verify that the popup closes when clicking "Reservar agora" button
+    testWidgets('Closes popup when clicking "Reservar agora"',
+        (WidgetTester tester) async {
+      // Pumping the widget into the test environment
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -81,15 +94,15 @@ void main() {
         ),
       );
 
-      // 🔹 Garante que o botão "Reservar agora" esteja visível antes de clicar
+      // Ensuring the "Reservar agora" button is visible before clicking
       final reservarButton = find.text('Reservar agora');
       await tester.ensureVisible(reservarButton);
 
-      // 🔹 Simula um clique no botão "Reservar agora"
+      // Simulating a tap on the "Reservar agora" button
       await tester.tap(reservarButton);
       await tester.pumpAndSettle();
 
-      // 🔹 O popup deve desaparecer da tela
+      // Expectation: The popup should no longer be present
       expect(find.byType(Dialog), findsNothing);
     });
   });
