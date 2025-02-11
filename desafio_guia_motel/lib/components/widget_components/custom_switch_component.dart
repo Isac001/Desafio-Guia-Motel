@@ -3,16 +3,15 @@ import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
 import 'package:flutter/material.dart';
 
-
-class CustomToggleSwitch extends StatefulWidget {
-  const CustomToggleSwitch({super.key});
+class CustomSwitchComponent extends StatefulWidget {
+  const CustomSwitchComponent({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
-  _CustomToggleSwitchState createState() => _CustomToggleSwitchState();
+  _CustomSwitchComponentState createState() => _CustomSwitchComponentState();
 }
 
-class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
+class _CustomSwitchComponentState extends State<CustomSwitchComponent> {
   bool isNow = true;
 
   @override
@@ -22,7 +21,8 @@ class _CustomToggleSwitchState extends State<CustomToggleSwitch> {
       width: 260, // Comprimento ajustado
       decoration: BoxDecoration(
         color: Colors.white, // Fundo branco
-        borderRadius: BorderRadius.circular(kPaddingLarge), // Bordas arredondadas
+        borderRadius:
+            BorderRadius.circular(kPaddingLarge), // Bordas arredondadas
         border: Border.all(
           color: Colors.red.shade700, // Cor da borda
           width: 1.5,

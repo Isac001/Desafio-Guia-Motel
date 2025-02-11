@@ -1,14 +1,14 @@
 import 'package:desafio_guia_motel/components/fields_components/bar_itens_suite_component.dart';
 import 'package:desafio_guia_motel/components/fields_components/reservation_list_component.dart';
-import 'package:desafio_guia_motel/components/widget_components/custom_toggle_switch_component.dart';
+import 'package:desafio_guia_motel/components/widget_components/custom_switch_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/icon_component.dart';
 import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
-import 'package:desafio_guia_motel/list_motel_module/controllers/motel_service_controller.dart';
+import 'package:desafio_guia_motel/list_motel_module/providers/motel_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:provider/provider.dart';
 import '../models/guia_motel_models.dart';
 
 class MotelListScreen extends StatefulWidget {
@@ -19,9 +19,6 @@ class MotelListScreen extends StatefulWidget {
 }
 
 class _MotelListScreenState extends State<MotelListScreen> {
-  final MotelServiceController _motelServiceController =
-      Get.find<MotelServiceController>();
-
   String selectedZone = 'Zona Norte';
 
   final List<String> zones = [
@@ -35,14 +32,18 @@ class _MotelListScreenState extends State<MotelListScreen> {
   @override
   void initState() {
     super.initState();
-    _motelServiceController.pagingController
-        .addPageRequestListener((pageKey) async {
-      await _motelServiceController.lazyLoad(pageKey);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final motelProvider = Provider.of<MotelProvider>(context, listen: false);
+      motelProvider.pagingController.addPageRequestListener((pageKey) async {
+        await motelProvider.lazyLoad(pageKey);
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final motelProvider = Provider.of<MotelProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.red.shade700,
       appBar: AppBar(
@@ -63,7 +64,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                     alignment: Alignment.center,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: CustomToggleSwitch(),
+                      child: CustomSwitchComponent(),
                     ),
                   ),
                 ),
@@ -117,7 +118,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
         child: Padding(
           padding: const EdgeInsets.all(kPaddingMedium),
           child: PagedListView<int, GuiaMoteisModel>(
-            pagingController: _motelServiceController.pagingController,
+            pagingController: motelProvider.pagingController,
             builderDelegate: PagedChildBuilderDelegate(
               firstPageErrorIndicatorBuilder: (context) {
                 return Center(
@@ -133,7 +134,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                       ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            _motelServiceController.refreshList();
+                            motelProvider.refreshList();
                           });
                         },
                         child: const TextComponent(
@@ -201,7 +202,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 650,
+                      height: 730,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: motel.suites.length,
@@ -211,8 +212,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                           return Padding(
                             padding: const EdgeInsets.only(right: kPaddingSM),
                             child: SizedBox(
-                              width: 330,
-                              height: 330,
+                              width: 340,
                               child: Column(
                                 children: [
                                   Card(
@@ -234,7 +234,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                                           kPaddingSmall),
                                                   child: Image.network(
                                                     foto,
-                                                    height: 240,
+                                                    height: 270,
                                                     width: 300,
                                                     fit: BoxFit.cover,
                                                   ),
@@ -253,6 +253,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                             textAlign: TextAlign.center,
                                             color: Colors.black,
                                             fontFamily: 'Times New Roman',
+                                            maxLines: 4,
                                           ),
                                         ),
                                       ],
@@ -282,10 +283,6 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                         'desconto': periodo.desconto,
                                       };
                                     }).toList(),
-                                    onReserveTap: (index) {
-                                      print(
-                                          "Reservar para o período ${suite.periodos[index].tempoFormatado}");
-                                    },
                                   ),
                                 ],
                               ),
