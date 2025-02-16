@@ -1,50 +1,52 @@
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:flutter/material.dart';
 
+/// A reusable text component with customizable styles.
 class TextComponent extends StatelessWidget {
-  // Texto a ser exibido
+  // The text content to be displayed
   final String data;
 
-  // Tamanho da fonte
+  // Font size of the text
   final double fontSize;
 
-  // Peso da fonte
+  // Font weight for text styling
   final FontWeight fontWeight;
 
-  // Cor do texto
+  // Text color (optional)
   final Color? color;
 
-  // Número máximo de linhas
+  // Maximum number of lines before truncating text
   final int maxLines;
 
-  // Overflow do texto
+  // Defines how overflowing text should be handled
   final TextOverflow? overflow;
 
-  // Alinhamento do texto
+  // Alignment of text within its container
   final TextAlign? textAlign;
 
-  // Nome da família da fonte
+  // Custom font family (optional)
   final String? fontFamily;
 
-  // Decoração (sublinhado, riscado, etc.)
+  // Text decoration (e.g., underline, strikethrough)
   final TextDecoration? decoration;
 
-  // Cor da decoração (linha riscada, sublinhada, etc.)
+  // Color of the text decoration (optional)
   final Color? decorationColor;
 
-  // Espessura da decoração (linha riscada ou sublinhada)
+  // Thickness of the text decoration (optional)
   final double? decorationThickness;
 
+  /// Constructor with default values for font styling and behavior
   const TextComponent({
     super.key,
     required this.data,
     this.maxLines = 1,
     this.color,
-    this.fontSize = kFontsizeMedium, // Agora usa a constante
+    this.fontSize = kFontsizeMedium,
     this.fontWeight = FontWeight.normal,
     this.overflow = TextOverflow.ellipsis,
     this.textAlign = TextAlign.start,
-    this.fontFamily, // Novo parâmetro para definir a fonte
+    this.fontFamily,
     this.decoration,
     this.decorationColor,
     this.decorationThickness,
@@ -53,19 +55,19 @@ class TextComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+      // The text content displayed
       data,
-      softWrap: true,
       textAlign: textAlign,
       maxLines: maxLines,
       style: TextStyle(
-        overflow: overflow,
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
-        fontFamily: fontFamily, // Define a fonte personalizada
+        fontFamily: fontFamily,
         decoration: decoration,
         decorationColor: decorationColor,
         decorationThickness: decorationThickness,
+        overflow: overflow, 
       ),
     );
   }
