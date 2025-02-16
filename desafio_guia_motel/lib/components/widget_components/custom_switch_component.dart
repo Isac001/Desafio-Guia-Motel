@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 /// A custom switch component that allows the user to toggle between two options.
 class CustomSwitchComponent extends StatefulWidget {
+  
   /// Constructor for the CustomSwitchComponent.
   const CustomSwitchComponent({super.key});
 
@@ -21,18 +22,16 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
   /// `true` means "Go Now" is selected, `false` means "Go Another Day" is selected.
   bool isNow = true;
 
-  /// Fixed width for the switch component.
-  final double switchWidth = 260;
-
   @override
   Widget build(BuildContext context) {
     /// Main container that wraps the switch component.
     return Container(
       height: kPaddingXXLarge - kPaddingSmall,
-      width: switchWidth,
+      width: MediaQuery.of(context).size.width * 0.7,
       decoration: BoxDecoration(
         color: ThemeColor.whiteColor,
         borderRadius: BorderRadius.circular(kRadiusLarge),
+        
         border: Border.all(
           color: ThemeColor.primaryColor,
           width: 1.5,
@@ -51,7 +50,7 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: isNow ? ThemeColor.redColor : Colors.transparent,
+                  color: isNow ? ThemeColor.primaryColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(kRadiusLarge),
                 ),
                 alignment: Alignment.center,
@@ -62,19 +61,22 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
                     /// Flash icon for "Go Now" button
                     Icon(
                       Icons.flash_on,
-                      color:
-                          isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color: isNow
+                          ? ThemeColor.whiteColor
+                          : ThemeColor.primaryColor,
                       size: kFontsizeStandard,
                     ),
                     const SizedBox(width: kPaddingSmall),
+
 
                     /// Text for "Go Now" button
                     TextComponent(
                       data: "ir agora",
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color:
-                          isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color: isNow
+                          ? ThemeColor.whiteColor
+                          : ThemeColor.primaryColor,
                     ),
                   ],
                 ),
@@ -92,7 +94,7 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: !isNow ? ThemeColor.redColor : Colors.transparent,
+                  color: !isNow ? ThemeColor.primaryColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(kRadiusLarge),
                 ),
                 alignment: Alignment.center,
@@ -103,19 +105,22 @@ class CustomSwitchComponentState extends State<CustomSwitchComponent> {
                     /// Calendar icon for "Go Another Day" button
                     Icon(
                       Icons.calendar_today,
-                      color:
-                          !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color: !isNow
+                          ? ThemeColor.whiteColor
+                          : ThemeColor.primaryColor,
                       size: kFontsizeStandard,
                     ),
                     const SizedBox(width: kPaddingSmall),
+
 
                     /// Text for "Go Another Day" button
                     TextComponent(
                       data: "ir outro dia",
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color:
-                          !isNow ? ThemeColor.whiteColor : ThemeColor.redColor,
+                      color: !isNow
+                          ? ThemeColor.whiteColor
+                          : ThemeColor.primaryColor,
                     ),
                   ],
                 ),

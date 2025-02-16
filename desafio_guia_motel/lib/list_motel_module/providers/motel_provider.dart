@@ -13,6 +13,15 @@ class MotelProvider with ChangeNotifier {
   /// Default value is 'Zona Norte'.
   String selectedZone = 'Zona Norte';
 
+  /// List of available zones.
+  final List<String> zones = [
+    'Zona Norte',
+    'Zona Sul',
+    'Zona Leste',
+    'Zona Oeste',
+    'Centro'
+  ];
+
   /// Indicates whether the data is being loaded.
   bool isLoading = false;
 

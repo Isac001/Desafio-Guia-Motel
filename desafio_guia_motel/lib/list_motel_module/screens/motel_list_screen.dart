@@ -24,15 +24,6 @@ class _MotelListScreenState extends State<MotelListScreen> {
   // Default selected zone
   String selectedZone = 'Zona Norte';
 
-  // List of available zones
-  final List<String> zones = [
-    'Zona Norte',
-    'Zona Sul',
-    'Zona Leste',
-    'Zona Oeste',
-    'Centro'
-  ];
-
   // Inition Fuctions
   @override
   void initState() {
@@ -94,32 +85,34 @@ class _MotelListScreenState extends State<MotelListScreen> {
 
             // Zone selection dropdown
             DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: selectedZone,
-                icon: const Icon(Icons.arrow_drop_down,
-                    color: ThemeColor.whiteColor),
-                dropdownColor: ThemeColor.primaryColor,
-                style: const TextStyle(
-                  color: ThemeColor.whiteColor,
-                  fontSize: kFontsizeStandard,
-                  fontWeight: FontWeight.bold,
-                ),
-                borderRadius: BorderRadius.circular(kRadiusMedium),
-                items: zones.map((zone) {
-                  return DropdownMenuItem<String>(
-                    value: zone,
-                    child: TextComponent(
-                      data: zone,
+              child: Consumer<MotelProvider>(
+                builder: (context, motelProvider, child) {
+                  return DropdownButton<String>(
+                    value: motelProvider.selectedZone,
+                    icon: const Icon(Icons.arrow_drop_down,
+                        color: ThemeColor.whiteColor),
+                    dropdownColor: ThemeColor.primaryColor,
+                    style: const TextStyle(
+                      color: ThemeColor.whiteColor,
                       fontSize: kFontsizeStandard,
                       fontWeight: FontWeight.bold,
-                      color: ThemeColor.whiteColor,
                     ),
+                    borderRadius: BorderRadius.circular(kRadiusMedium),
+                    items: motelProvider.zones.map((zone) {
+                      return DropdownMenuItem<String>(
+                        value: zone,
+                        child: TextComponent(
+                          data: zone,
+                          fontSize: kFontsizeStandard,
+                          fontWeight: FontWeight.bold,
+                          color: ThemeColor.whiteColor,
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      motelProvider.updateZone(newValue!);
+                    },
                   );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedZone = newValue!;
-                  });
                 },
               ),
             ),
@@ -148,7 +141,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const TextComponent(
+                      TextComponent(
                         data: "Erro ao carregar dados.",
                         fontSize: kFontsizeMedium,
                         fontWeight: FontWeight.bold,
@@ -163,7 +156,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: ThemeColor.primaryColor,
                         ),
-                        child: const TextComponent(
+                        child: TextComponent(
                           data: "Tentar Novamente",
                           fontSize: kFontsizeMedium,
                           fontWeight: FontWeight.bold,
@@ -175,7 +168,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                 );
               },
               noItemsFoundIndicatorBuilder: (context) {
-                return const Center(
+                return Center(
                   child: TextComponent(
                     data: "Nenhum motel encontrado!",
                     fontSize: kFontsizeMedium,
@@ -249,9 +242,6 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(kRadiusSmall),
-                                      side: const BorderSide(
-                                          color: ThemeColor.greyColor,
-                                          width: 0.3),
                                     ),
                                     child: Column(
                                       children: [
@@ -269,7 +259,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                                           kRadiusSmall),
                                                   child: Image.network(
                                                     foto,
-                                                    height: screenHeight * 0.34,
+                                                    height: screenHeight * 0.3,
                                                     width: screenWidth * 0.7,
                                                     fit: BoxFit.cover,
                                                   ),
@@ -280,14 +270,14 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(
-                                              kPaddingSmall),
+                                              kPaddingLarge),
                                           child: TextComponent(
                                             data: suite.nome,
-                                            fontSize: kFontsizeMedium,
+                                            fontSize: kFontsizeLarge,
                                             fontWeight: FontWeight.bold,
                                             textAlign: TextAlign.center,
                                             color: Colors.black,
-                                            fontFamily: 'Times New Roman',
+                                            overflow: TextOverflow.visible,
                                           ),
                                         ),
                                       ],
@@ -295,7 +285,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                   ),
 
                                   // Bar of Items available
-                                  BarItensSwitchComponent(
+                                  BarItensComponent(
                                     items: suite.categoriaItens.map((item) {
                                       return {
                                         'icone': item.icone,
@@ -310,7 +300,7 @@ class _MotelListScreenState extends State<MotelListScreen> {
                                   ),
 
                                   // Reserve Camps
-                                  ReserveSuiteComponent(
+                                ReserveListComponent (
                                     periods: suite.periodos.map((periodo) {
                                       return {
                                         'tempoFormatado':

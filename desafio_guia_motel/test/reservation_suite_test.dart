@@ -40,7 +40,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveSuiteComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );
@@ -68,7 +68,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveSuiteComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );
@@ -95,7 +95,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: ReserveSuiteComponent(periods: testPeriods),
+            body: ReserveListComponent(periods: testPeriods),
           ),
         ),
       );

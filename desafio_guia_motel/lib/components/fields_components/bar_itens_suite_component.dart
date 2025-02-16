@@ -1,16 +1,23 @@
-import 'package:desafio_guia_motel/components/widget_components/text_component.dart';
+import 'package:desafio_guia_motel/components/fields_components/popup_itens_suite_component.dart';
 import 'package:desafio_guia_motel/constants/fontsize_constants.dart';
 import 'package:desafio_guia_motel/constants/padding_constants.dart';
 import 'package:desafio_guia_motel/constants/radius_constants.dart';
 import 'package:desafio_guia_motel/constants/theme_color.dart';
 import 'package:flutter/material.dart';
 
-class BarItensSwitchComponent extends StatelessWidget {
+// A stateless widget that displays a bar with item icons and a "View All" button if necessary
+class BarItensComponent extends StatelessWidget {
+  // List of items containing icons and names
   final List<Map<String, String>> items;
+  
+  // Icon size for each item
   final double iconSize;
+  
+  // Suite name displayed in the popup
   final String suiteName;
 
-  const BarItensSwitchComponent({
+  // Constructor requiring items and suite name, with a default icon size
+  const BarItensComponent({
     super.key,
     required this.items,
     required this.suiteName,
@@ -19,9 +26,13 @@ class BarItensSwitchComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Maximum number of visible items in the bar
     final maxVisibleItems = 3;
+
+    // Determines if there are more items than the visible limit
     final bool hasMoreItems = items.length > maxVisibleItems;
 
+    // If there are more items, show only two and add a "View All" button
     final itemsToShow = hasMoreItems
         ? [
             ...items.take(2),
@@ -30,26 +41,39 @@ class BarItensSwitchComponent extends StatelessWidget {
         : items.take(maxVisibleItems).toList();
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: kPaddingSmall,
-        horizontal: kPaddingMedium,
+      // Padding for the container based on screen size
+      padding: EdgeInsets.symmetric(
+        vertical: MediaQuery.of(context).size.height * 0.02,
+        horizontal: MediaQuery.of(context).size.height * 0.02,
       ),
+      // Styling for the container with a white background and rounded corners
       decoration: BoxDecoration(
         color: ThemeColor.whiteColor,
         borderRadius: BorderRadius.circular(kRadiusStandard),
-        border: Border.all(
-          color: ThemeColor.greyColor,
-          width: 0,
-        ),
       ),
+      // Displaying the items in a row
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: itemsToShow.map((item) {
+          // Check if the item is the "View All" button
           final isMoreButton = item['icone'] == 'ver_todos';
 
           return isMoreButton
               ? GestureDetector(
-                  onTap: () => _showPopup(context),
+                  // Show the popup when tapping the "View All" button
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (BuildContext context) {
+                        return PopupItensComponent(
+                          suiteName: suiteName,
+                          items: items,
+                        );
+                      },
+                    );
+                  },
+                  // Displaying the "More" icon for the button
                   child: Icon(
                     Icons.more_horiz,
                     color: ThemeColor.greyColor,
@@ -59,11 +83,13 @@ class BarItensSwitchComponent extends StatelessWidget {
               : Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Displaying the item's icon
                     SizedBox(
                       height: iconSize,
                       width: iconSize,
                       child: Image.network(
                         item['icone'] ?? '',
+                        // Show a default icon if the image fails to load
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(
                           Icons.device_unknown,
@@ -77,114 +103,6 @@ class BarItensSwitchComponent extends StatelessWidget {
                 );
         }).toList(),
       ),
-    );
-  }
-
-  void _showPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: ThemeColor.whiteColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(kRadiusMedium),
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.8,
-              minWidth: MediaQuery.of(context).size.width * 0.6,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(kPaddingMedium),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: kPaddingMedium),
-                    child: Center(
-                      child: TextComponent(
-                        maxLines: 4,
-                        textAlign: TextAlign.center,
-                        data: "Itens disponíveis da $suiteName",
-                        fontSize: kFontsizeLarge,
-                        fontWeight: FontWeight.bold,
-                        color: ThemeColor.secundaryColor,
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: kPaddingMedium,
-                          mainAxisSpacing: kPaddingMedium,
-                          childAspectRatio: 1,
-                        ),
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index];
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                height: 50.0,
-                                width: 50.0,
-                                child: Image.network(
-                                  item['icone'] ?? '',
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(
-                                    Icons.device_unknown,
-                                    size: kFontsizeLarge,
-                                    color: ThemeColor.greyColor,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: kPaddingSmall),
-                              TextComponent(
-                                data: item['nome'] ?? '',
-                                fontSize: kFontsizeStandard,
-                                color: ThemeColor.greyColor,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: kPaddingMedium),
-                  Align(
-                    alignment: Alignment.center,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeColor.redColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(kRadiusSmall),
-                        ),
-                      ),
-                      child: const TextComponent(
-                        data: "Fechar",
-                        fontSize: kFontsizeStandard,
-                        color: ThemeColor.whiteColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

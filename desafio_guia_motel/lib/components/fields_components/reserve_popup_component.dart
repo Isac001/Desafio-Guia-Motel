@@ -74,7 +74,8 @@ class ReservationPopup extends StatelessWidget {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Reserva realizada com sucesso!"),
+                          content: TextComponent(
+                              data: "Reserva realizada com sucesso!"),
                           backgroundColor: ThemeColor.greenColor,
                         ),
                       );
@@ -86,7 +87,7 @@ class ReservationPopup extends StatelessWidget {
                         borderRadius: BorderRadius.circular(kRadiusMedium),
                       ),
                     ),
-                    child: const TextComponent(
+                    child: TextComponent(
                       data: "Reservar agora",
                       fontSize: kFontsizeStandard,
                       color: ThemeColor.whiteColor,
