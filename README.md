@@ -13,6 +13,11 @@ The project requires two additional Git repositories besides this one. First, th
 
 ### Steps to Clone the Repository:
 
+- **Step 0:** Watch the app demonstration video :
+    ```bash
+    https://youtu.be/jHQlQaFN-To?si=5m7GgSgBA4M6seOr
+    ```
+
 - **Step 1:** Open a terminal and run the following command:
     ```bash
     git clone https://github.com/Isac001/Desafio-Guia-Motel.git DesafioGuiaMotei
